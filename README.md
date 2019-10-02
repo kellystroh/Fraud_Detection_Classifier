@@ -12,7 +12,9 @@ Also, **please note: this repository is a work in progress**. I am in the proces
 
 #### In Progress
 * Natural Language Processing
-  * Use text columns (event description & organization description)
+  * Process text columns (event & organization descriptions)
+      * Remove HTML, punctuation, stop words
+      * Tokenize & lemmatize
   * Compare vectorizers: Count, TF-IDF, and Hash
 * Model Selection
    * Hyperparameter tuning using Random Search & Grid Search
