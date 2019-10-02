@@ -12,7 +12,7 @@ from nltk.stem.wordnet import WordNetLemmatizer
 import re
 
 
-data_raw = pd.read_csv('data/raw_data.csv')
+data_raw = pd.read_csv('data/raw_data.csv', index_col=0)
 
 # create fraud column as target
 target = pd.DataFrame()
@@ -20,7 +20,7 @@ target["fraud"] = data_raw["account"].str.contains("fraud")
 
 def drop_leaky_cols(df):
     # eliminate columns that won't appear in test data
-    df.drop(['account', 'payout_date', 'xt', 'order_count', 'payout_count'], axis=1, inplace=True)
+    df.drop(['account', 'payout_date', 'xt', 'order_count', 'payout_count', 'sale_duration2'], axis=1, inplace=True)
 
 
 def make_cat_cols(df):
@@ -29,7 +29,8 @@ def make_cat_cols(df):
     #df.listed = df.listed.astype('category')
 
     ### 'payout_type' column : "ACH" = 0, "CHECK" = 1, "" = 2
-    df.payout_method.replace({"ACH": 0, "CHECK": 1, "": 2}, inplace=True)
+    df.payout_method.fillna('x', inplace=True)
+    df.payout_method.replace({"ACH": 0, "CHECK": 1, "x": 2}, inplace=True)
     #df.payout_type = df.payout_type.astype('category', inplace=True)
 
     ### 'currency' column : [AUD, CAD, EUR, GBP, MXN, NZD, USD]
@@ -37,7 +38,10 @@ def make_cat_cols(df):
     currency_codes = {k:v for v, k in enumerate(currency_list)}
     df.currency.replace({k:v for v, k in enumerate(currency_list)}, inplace=True)
 
-
+    ### 'country' column : 
+    country_dict = {k:v for v, k in enumerate(list(df.country.unique()))}
+    df.country.replace(country_dict, inplace=True)
+    df.country.fillna(71, inplace=True)
 
 def clean_html(sentence):
     cleanr = re.compile('<.*?>')
@@ -240,9 +244,11 @@ def previous_payouts(df):
 def add_new_columns(df):
     # make column for whether 'description' includes a url 
     df['desc_has_link'] = df.description.str.contains('href')
+    df.desc_has_link.fillna(False, inplace=True)
 
     # make column for whether 'org_desc' includes a url 
     df['org_has_link'] = df.org_desc.str.contains('href')
+    df.org_has_link.fillna(False, inplace=True)
 
     # make column for email suffix code
     df['email_suffix'] = df.email_domain.str.strip().str.lower().str.extract(r'([^.]+$)')
@@ -279,9 +285,9 @@ if __name__ == '__main__':
     
     ticket_types(data)
     fill_na_cols(data)
-    scrub_desc(data)
-    stem_tokens(data)
-    to_lemma(data)
+#    scrub_desc(data)
+#    stem_tokens(data)
+#    to_lemma(data)
     make_cat_cols(data)
     add_new_columns(data)
     previous_payouts(data)
