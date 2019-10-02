@@ -8,12 +8,12 @@ Also, **please note: this repository is a work in progress**. I am in the proces
 
 * **EDA**
 * **Feature Engineering**
-<span style="color:grey">
-* Natural Language Processing
+
+* <span style="color:grey"> Natural Language Processing </span>
 * Model Selection & Hyperparameter Tuning
     * Random Forest
     * Logistic Regression
     * Gradient Boosting
-</span>
+
     * K Nearest Neighbors
     * Naive Bayes
