@@ -17,3 +17,4 @@ Also, **please note: this repository is a work in progress**. I am in the proces
 
     * K Nearest Neighbors
     * Naive Bayes
+<span style="color:red">some **This is Red Bold.** text</span> 
