@@ -4,16 +4,21 @@ Online ticket vendors offer the convenience of digital tickets without the expen
 
 This repo explores the ways to **customize fraud detection classification models for use in the ticket vendor industry**. Because we utilize real data from a ticket sales company, some segments of the work posted here will not be reproducible. This is one of several steps taken to ensure the anonymity of the vendor and its clients. 
 
-Also, **please note: this repository is a work in progress**. I am in the process of recreating files to remove all reference to identifiable information. The 
+Also, **please note: this repository is a work in progress**. I am in the process of recreating files to remove all reference to identifiable information. As new sections are completed, I will post files here and update the content list below. 
 
+#### Available for Review
 * **EDA**
 * **Feature Engineering**
-<span style="color:grey">
+
+#### In Progress
 * Natural Language Processing
-* Model Selection & Hyperparameter Tuning
-    * Random Forest
-    * Logistic Regression
-    * Gradient Boosting
-</span>
-    * K Nearest Neighbors
-    * Naive Bayes
+  * Process text columns (event & organization descriptions)
+      * Remove HTML, punctuation, stop words
+      * Tokenize & lemmatize
+  * Compare vectorizers: Count, TF-IDF, and Hash
+* Model Selection
+   * Hyperparameter tuning using Random Search & Grid Search
+   * Compare model performance with cross-validation
+      * Random Forest
+      * Logistic Regression
+      * Gradient Boosting
