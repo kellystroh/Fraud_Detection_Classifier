@@ -9,7 +9,7 @@ Also, **please note: this repository is a work in progress**. I am in the proces
 * **EDA**
 * **Feature Engineering**
 
-* <span style="color:grey"> Natural Language Processing </span>
+* <span style="color:blue"> Natural Language Processing </span>
 * Model Selection & Hyperparameter Tuning
     * Random Forest
     * Logistic Regression
