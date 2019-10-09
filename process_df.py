@@ -280,7 +280,6 @@ if __name__ == '__main__':
     
     target.to_csv('data/target.csv')
     drop_leaky_cols(data_raw)
-    
     data = data_raw.copy()
     
     ticket_types(data)
@@ -293,7 +292,8 @@ if __name__ == '__main__':
     previous_payouts(data)
 
     data.to_csv('data/clean_data.csv')
-
+    
+    data
 '''
 Columns used in original model:
 
