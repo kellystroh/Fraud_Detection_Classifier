@@ -8,6 +8,7 @@ Also, **please note: this repository is a work in progress**. I am in the proces
 
 #### Available for Review
 * **EDA**
+![Alt Text](images/EDA1.png)
 * **Feature Engineering**
 
 #### In Progress
