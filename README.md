@@ -8,10 +8,10 @@ Also, **please note: this repository is a work in progress**. I am in the proces
 
 #### Available for Review
 * **EDA**
-<img src="images/EDA_img.png" width="200" height="200" />
+<img src="images/EDA_img.png" width="500" />
 * **Feature Engineering**
 <img src="images/feat_eng1.png" />
-<img src="images/feat_eng2.png" width="200" />
+<img src="images/feat_eng2.png" width="500" />
 
 #### In Progress
 * Natural Language Processing
