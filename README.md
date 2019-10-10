@@ -8,7 +8,7 @@ Also, **please note: this repository is a work in progress**. I am in the proces
 
 #### Available for Review
 * **EDA**
-![Sample plot from EDA notebook](images/EDA_img.png)
+![Sample plot from EDA notebook](images/EDA_img)
 * **Feature Engineering**
 ![Sample plot 1 from feature engineering notebook](images/feat_eng1.png)
 ![Sample plot 2 from feature engineering notebook](images/feat_eng2.png)
