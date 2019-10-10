@@ -11,7 +11,7 @@ Also, **please note: this repository is a work in progress**. I am in the proces
 <img src="images/EDA_img.png" width="350" />
 
 * **Feature Engineering**
-<img src="images/feat_eng1.png" />
+<img src="images/feat_eng1.png" width="650" />
 
 #### In Progress
 * Natural Language Processing
