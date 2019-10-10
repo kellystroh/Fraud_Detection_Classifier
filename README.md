@@ -8,10 +8,11 @@ Also, **please note: this repository is a work in progress**. I am in the proces
 
 #### Available for Review
 * **EDA**
-![Sample plot from EDA notebook](images/EDA_img.png) { width: 50px; }
+<img src="images/EDA_img.png" width="200" height="200" />
 * **Feature Engineering**
-![Sample plot 1 from feature engineering notebook](images/feat_eng1.png)
-![Sample plot 2 from feature engineering notebook](images/feat_eng2.png) { width: 50px; }
+<img src="images/feat_eng1.png" />
+<img src="images/feat_eng2.png" width="200" />
+
 #### In Progress
 * Natural Language Processing
   * Process text columns (event & organization descriptions)
