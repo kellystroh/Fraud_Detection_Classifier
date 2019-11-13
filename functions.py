@@ -33,3 +33,17 @@ def actual_vs_predicted_counts(yhat, ytest):
     
     return predicted_fraud, predicted_nf, actual_fraud, actual_nf
 
+def result_sets(yhat, ytest):
+    
+    predicted_fraud = set(yhat[yhat == True].index)
+    predicted_nf = set(yhat[yhat == False].index)
+
+    actual_fraud = set(ytest[ytest == True].index)
+    actual_nf = set(ytest[ytest == False].index)
+    
+    tp_set = predicted_fraud.intersection(actual_fraud)
+    fp_set = predicted_fraud.intersection(actual_nf)
+    tn_set = predicted_nf.intersection(actual_nf)
+    fn_set = predicted_nf.intersection(actual_fraud)
+    
+    return tp_set, fp_set, tn_set, fn_set
