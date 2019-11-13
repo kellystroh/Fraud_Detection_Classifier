@@ -10,6 +10,7 @@ from nltk.tokenize import RegexpTokenizer, sent_tokenize, word_tokenize
 from nltk.stem.wordnet import WordNetLemmatizer
 
 import re
+import ast
 
 
 data_raw = pd.read_csv('data/raw_data.csv', index_col=0)
@@ -21,27 +22,6 @@ target["fraud"] = data_raw["account"].str.contains("fraud")
 def drop_leaky_cols(df):
     # eliminate columns that won't appear in test data
     df.drop(['account', 'payout_date', 'xt', 'order_count', 'payout_count', 'sale_duration2'], axis=1, inplace=True)
-
-
-def make_cat_cols(df):
-    ### 'listed' column : replace 'y' with 1, replace 'n' with 0
-    df.listed.replace({"y":1, "n": 0}, inplace=True)
-    #df.listed = df.listed.astype('category')
-
-    ### 'payout_type' column : "ACH" = 0, "CHECK" = 1, "" = 2
-    df.payout_method.fillna('x', inplace=True)
-    df.payout_method.replace({"ACH": 0, "CHECK": 1, "x": 2}, inplace=True)
-    #df.payout_type = df.payout_type.astype('category', inplace=True)
-
-    ### 'currency' column : [AUD, CAD, EUR, GBP, MXN, NZD, USD]
-    currency_list = ['AUD', 'CAD', 'EUR', 'GBP', 'MXN', 'NZD', 'USD']
-    currency_codes = {k:v for v, k in enumerate(currency_list)}
-    df.currency.replace({k:v for v, k in enumerate(currency_list)}, inplace=True)
-
-    ### 'country' column : 
-    country_dict = {k:v for v, k in enumerate(list(df.country.unique()))}
-    df.country.replace(country_dict, inplace=True)
-    df.country.fillna(71, inplace=True)
 
 def clean_html(sentence):
     cleanr = re.compile('<.*?>')
@@ -65,12 +45,12 @@ def clean_emails(sentence):
 
 def clean_punc(word):
     cleaned = re.sub(r"'s", r'', word)
-    cleaned = re.sub(r'[?|!|\'|#]', r'', cleaned)
+    cleaned = re.sub(r'[?|!|\'|#-]', r'', cleaned)
     cleaned = re.sub(r'[.|,|)|(|\|/]', r' ', cleaned)
     return cleaned
 
 def scrub_desc(df):
-    stop = stopwords.words('english')
+    #stop = stopwords.words('english')
 
     sentence_list = []
     
@@ -104,31 +84,29 @@ def get_wordnet_pos(treebank_tag):
     else:
         return wordnet.NOUN
 
-def stem_tokens(df):
-    stop = stopwords.words('english')
-    sno = SnowballStemmer('english')
-    token_col = []
-    for sentence in df['clean_desc'].fillna('').values:
-        # print(sentence)
-        # print(type(sentence))
-        tokens = []
-        for word in sentence.split(' '):
-            #print(word)
-            if ((word.isalpha()) and (len(word) > 2) and (word not in stop)):
-                s = sno.stem(word)
-                tokens.append(s)
-            else:
-                continue
-        token_col.append(tokens)
-    df['stem_tokens'] = token_col
+def word_count_fields(df):
+    word_count_name = []
+    for row in df['name'].fillna('').values:
+        row = clean_punc(row)
+        row = row.split(' ')
+        word_count = len(row)
+        word_count_name.append(word_count)
+    df['word_count_name'] = word_count_name
 
+    word_count_org = []
+    for row in df['org_name'].fillna('').values:
+        row = clean_punc(row)
+        row = row.split(' ')
+        word_count = len(row)
+        word_count_org.append(word_count)
+    df['word_count_org'] = word_count_org
 
 def to_lemma(df):
     # takes text, returns lemmatized words
     # remove nonsense
     stop = stopwords.words('english')
-    lem_list = []
-    lem_sent_col = []
+    lem_tokens = []
+    lem_docs = []
     for text in df['clean_desc'].fillna('').values:
         if type(text) != str:
             text = str(text)
@@ -148,36 +126,10 @@ def to_lemma(df):
             p_new = get_wordnet_pos(p)
             lemmed_words.append(lem.lemmatize(w,p_new))
             lemmed_sentence += (w + ' ')
-        lem_list.append(lemmed_words)
-        lem_sent_col.append(lemmed_sentence)
-    df['lem_tokens'] = lem_list 
-    df['lem_text'] = lem_sent_col
-    
-
-'''def lem_text(df):
-    nrows = len(df)
-    lemmatized_text_list = []
-    wordnet_lemmatizer = WordNetLemmatizer()
-
-    for row in range(0, nrows):
-        
-        # Create an empty list containing lemmatized words
-        lemmatized_list = []
-        
-        # Save the text and its words into an object
-        text = df.loc[row]['clean_desc']
-        text_words = text.split(" ")
-
-        # Iterate through every word to lemmatize
-        for word in text_words:
-            lemmatized_list.append(wordnet_lemmatizer.lemmatize(word, pos="v"))
-            
-        # Join the list
-        lemmatized_text = " ".join(lemmatized_list)
-        
-        # Append to the list containing the texts
-        lemmatized_text_list.append(lemmatized_text)
-    df['lem_text'] = lemmatized_text_list'''
+        lem_tokens.append(lemmed_words)
+        lem_docs.append(lemmed_sentence)
+    df['lem_tokens'] = lem_tokens 
+    df['lem_text'] = lem_docs
 
 ### FILL NA : FB, Twitter, Delivery_Method, Sale_Duration
 def fill_na_cols(df):
@@ -189,21 +141,25 @@ def fill_na_cols(df):
                 'org_twitter': tw, 
                 'sale_duration':sd, 
                 'delivery_method':86, 
-                'average_ticket_price':0}
+                'average_ticket_price':0,
+                'country': 'X',
+                'payout_method': 'X'}
 
     df.fillna(value=fill_values, inplace=True)
     df[['org_facebook', 'org_twitter', 'sale_duration']].astype(int, inplace=True)
 
 
-def ticket_types(df): 
-    import ast
+def ticket_groups(df): 
     
-    tt_col = df['ticket_groups']
+    tg_col = df['ticket_groups']
     num_tiers = []
     num_tickets = []
     average_price = []
+    min_price = []
+    max_price = []
+    sum_ticket = []
     
-    for row in tt_col:
+    for row in tg_col:
         row = ast.literal_eval(row)
         num_tiers.append(len(row))
         quant = []
@@ -212,15 +168,27 @@ def ticket_types(df):
             quant.append(dct['quantity_total'])
             price.append(dct['cost'])
         arr = np.array([quant, price])
-        average_price.append(np.round((arr[0] * arr[1]).sum()/arr[1].sum(), 2))
-        num_tickets.append(int(arr[1].sum()))
-        
+        if arr[0].sum() != 0:
+            average_price.append(np.round((arr[0] * arr[1]).sum()/arr[0].sum(), 2))
+            num_tickets.append(int(arr[0].sum()))
+            min_price.append(arr[1].min())
+            max_price.append(arr[1].max())
+            sum_ticket.append((arr[0] * arr[1]).sum())
+        else: 
+            average_price.append(0)
+            num_tickets.append(0)
+            min_price.append(0)
+            max_price.append(0)
+            sum_ticket.append(0)
     df["num_tiers"] = num_tiers
     df["tickets_available"] = num_tickets
-    df["average_ticket_price"] = average_price 
+    df["average_ticket_price"] = average_price
+    df['min_price'] = min_price
+    df['max_price'] = max_price
+    df['potential_revenue'] = sum_ticket
     
-def previous_payouts(df):
-    import ast
+def past_payouts(df):
+    
     pp_col_value = df.past_payouts
     avg_payouts = []
     num_payouts = []
@@ -238,8 +206,8 @@ def previous_payouts(df):
 
         else:
             avg_payouts.append(0)
-    df["avg_previous_payouts"] = avg_payouts
-    df["num_previous_payouts"] = num_payouts
+    df["avg_past_payouts"] = avg_payouts
+    df["num_past_payouts"] = num_payouts
 
 def add_new_columns(df):
     # make column for whether 'description' includes a url 
@@ -281,25 +249,19 @@ if __name__ == '__main__':
     target.to_csv('data/target.csv')
     drop_leaky_cols(data_raw)
     data = data_raw.copy()
-    
-    ticket_types(data)
+
+    ticket_groups(data)
     fill_na_cols(data)
-#    scrub_desc(data)
-#    stem_tokens(data)
-#    to_lemma(data)
-    make_cat_cols(data)
-    add_new_columns(data)
-    previous_payouts(data)
-
-    data.to_csv('data/clean_data.csv')
     
-    data
-'''
-Columns used in original model:
-
-[["body_length", "channels","delivery_method","fb_published",
-"has_logo", "listed", "name_length",  "object_id", "org_facebook",
-"org_twitter", "payout_type", "sale_duration", "show_map", "user_created",
-"num_tiers", "tickets_available", "average_ticket_price", "user_age"]]
-
-'''
+    scrub_desc(data)
+    to_lemma(data)
+    
+    add_new_columns(data)
+    past_payouts(data)
+    
+    data.drop(['description', 'email_domain', 'date_created', 'end_date', 'start_date', 'date_published',
+           'org_desc', 'name','org_name', 'past_payouts', 'ticket_groups', 'venue_address',
+           'venue_country', 'venue_latitude', 'venue_longitude','venue_name', 'venue_state',
+           'email_suffix', 'object_id', 'payee_name', ], axis=1, inplace=True)
+    
+    data.to_csv('data/clean_data.csv')

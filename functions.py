@@ -22,3 +22,14 @@ def report(lst, df):
             lst_ct_mode.append(f'{round(df[x].value_counts().values[0]/len(df)*100, 2)}%')
     report = pd.DataFrame([lst, lst_unq, lst_na, lst_max, lst_min, lst_mode, lst_ct_mode], index=['name', 'Number of Unique Values', 'Number of NaN', 'Max', 'Min', 'Mode', 'Frequency of Mode'])
     return report
+
+def actual_vs_predicted_counts(yhat, ytest):
+    
+    predicted_fraud = len(yhat[yhat == True])
+    predicted_nf = len(yhat[yhat == False])
+
+    actual_fraud = len(ytest[ytest == True])
+    actual_nf = len(ytest[ytest == False])
+    
+    return predicted_fraud, predicted_nf, actual_fraud, actual_nf
+
