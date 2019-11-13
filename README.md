@@ -20,7 +20,7 @@ Also, **please note: this repository is a work in progress**. I am in the proces
       * Tokenize & lemmatize
   * Compare vectorizers: Count, TF-IDF, and Hash
 * Model Selection
-   * Hyperparameter tuning using Random Search & Grid Search
+   * Hyperparameter tuning using Bayesian Optimizer
    * Compare model performance with cross-validation
       * Random Forest
       * Logistic Regression
