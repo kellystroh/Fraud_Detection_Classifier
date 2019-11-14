@@ -14,6 +14,7 @@ Also, **please note: this repository is a work in progress**. I am in the proces
 <img src="images/feat_eng1.png" width="650" />
 
 * **Baseline Random Forest Model**
+<img src="images/pred_proba_hist.png" width="650" />
 
 #### In Progress
 * Natural Language Processing
