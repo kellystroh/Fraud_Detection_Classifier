@@ -13,6 +13,8 @@ Also, **please note: this repository is a work in progress**. I am in the proces
 * **Feature Engineering**
 <img src="images/feat_eng1.png" width="650" />
 
+* **Baseline Random Forest Model**
+
 #### In Progress
 * Natural Language Processing
   * Process text columns (event & organization descriptions)
