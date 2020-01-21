@@ -1,6 +1,6 @@
 # Outfox a Fraud
 
-Online ticket vendors offer the convenience of digital tickets without the expense of building an online sale platform. As intermediaries, these vendors are particularly reliant on convenience factor; their service must be easy and secure. There are few things less convenient than getting scammed. **Fraud detection is a growing application of machine learning**, and is a vital security measure across a range of industries.
+Online ticket vendors offer the convenience of digital tickets without the expense of building an online sale platform. As intermediaries, these vendors are particularly reliant on the convenience factor; their service must be easy and secure. There are few things less convenient than getting scammed. **Fraud detection is a growing application of machine learning**, and is a vital security measure across a range of industries.
 
 This repo explores the ways to **customize fraud detection classification models for use in the ticket vendor industry**. Because we utilize real data from a ticket sales company, some segments of the work posted here will not be reproducible. This is one of several steps taken to ensure the anonymity of the vendor and its clients. 
 
