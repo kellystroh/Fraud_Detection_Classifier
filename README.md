@@ -8,13 +8,13 @@ Also, **please note: this repository is a work in progress**. I am in the proces
 
 #### Available for Review
 * **EDA**
-<img src="images/EDA_img.png" width="350" />
+<img src="images/EDA_img.png" width="500" />
 
 * **Feature Engineering**
-<img src="images/feat_eng1.png" width="650" />
+<img src="images/feat_eng1.png" width="750" />
 
 * **Baseline Random Forest Model**
-<img src="images/pred_proba_hist.png" width="350" />
+<img src="images/pred_proba_hist.png" width="500" />
 
 #### In Progress
 * Natural Language Processing
